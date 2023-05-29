@@ -1,5 +1,6 @@
 const express = require("express");
-const config = require("./config/index");
+const config = require("./config");
+const connectDB = require("./Database/db");
 require("dotenv").config();
 
 // instatntiate express object.
