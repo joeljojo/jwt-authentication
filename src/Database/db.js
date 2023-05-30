@@ -12,6 +12,7 @@ async function connectDB() {
       host: config.database.host,
       dialect: "postgres",
       port: config.database.port,
+      logging: false,
     }
   );
 
@@ -21,7 +22,7 @@ async function connectDB() {
     await sequelize.authenticate();
     console.log("Connected to database successfully.");
   } catch (error) {
-    console.error("Unable to connect to the database:", error);
+    console.error("Unable to connect to the database:", error.message);
   }
 }
 connectDB();
