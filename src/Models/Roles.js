@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
+const User = require("./User");
 
 //Create Roles model
 const Role = sequelize.define(
@@ -21,5 +22,8 @@ const Role = sequelize.define(
     paranoid: true, // allow false deletion
   }
 );
+
+//establish an association
+Role.belongsToMany(User, { through: "UserRole" });
 
 module.exports = Role;
