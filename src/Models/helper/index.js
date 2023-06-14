@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const db = require("../index");
 const ClientError = require("../../exceptions/clientError");
 const User = db.user;
+
 // Generate safe copy of users(without password)
 const generateSafeCopy = (user) => {
   const _user = { ...user };
@@ -11,35 +12,34 @@ const generateSafeCopy = (user) => {
 
 // Get user by email if the user with provided email exists
 const getUserByEmail = async (email) => {
-  const availableEmails = await User.findOne({ where: { email: email } });
-
-  if (availableEmails.length === 0) return undefined;
-  return generateSafeCopy(availableEmails[0]);
+  const emailAvailable = await User.findOne({ where: { email: email } });
+  return emailAvailable ? generateSafeCopy(emailAvailable) : undefined;
 };
-const createUser = async (id, firstname, lastname, email, password) => {
+
+const createUser = async (id, firstName, lastName, email, password) => {
   id.trim();
-  firstname.trim();
-  lastname.trim();
+  firstName.trim();
+  lastName.trim();
   email.trim();
   password.trim();
 
   // ensure the fields are not empty
-  if (firstname.length === 0) throw new ClientError("First name is required");
-  else if (lastname.length === 0)
+  if (firstName.length === 0) throw new ClientError("First name is required");
+  else if (lastName.length === 0)
     throw new ClientError("Last name is required");
   else if (email.length === 0) throw new ClientError("Email is required");
   else if (password.length === 0) throw new ClientError("Password is required");
 
   // Check if user exists
-  if (getUserByEmail(email) != undefined)
+  if ((await getUserByEmail(email)) != undefined)
     throw new ClientError("User already exists");
 
   //Create the user
 
   const user = await User.create({
     id,
-    firstname,
-    lastname,
+    firstName,
+    lastName,
     email,
     password: bcrypt.hashSync(password, 12),
   });

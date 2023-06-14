@@ -5,12 +5,12 @@ const { createUser } = require("../models/helper");
 const newUser = async (req, res, next) => {
   const id = uuidv4(); // generate id randomly
   // get user data input
-  const { firstname, lastname, email, password } = req.body;
+  const { firstName, lastName, email, password } = req.body;
 
   // create user
-  const user = createUser(id, firstname, lastname, email, password);
+  const user = createUser(id, firstName, lastName, email, password);
 
-  res.status(201).json({ message: "User registered successfully", user });
+  res.status(201).json({ message: "User registered successfully", user: user });
 };
 
 module.exports = { newUser };
