@@ -1,5 +1,6 @@
-const { createUser } = require("../Models/User");
+// const createUser = require("../models/helper/index");
 const { v4: uuidv4 } = require("uuid");
+const { createUser } = require("../models/helper");
 
 const newUser = async (req, res, next) => {
   const id = uuidv4(); // generate id randomly
@@ -8,6 +9,7 @@ const newUser = async (req, res, next) => {
 
   // create user
   const user = createUser(id, firstname, lastname, email, password);
+
   res.status(201).json({ message: "User registered successfully", user });
 };
 

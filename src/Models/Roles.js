@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const RolesModel = (sequelize, Sequelize) => {
+module.exports = (sequelize, Sequelize) => {
   //Create Roles model
   const Role = sequelize.define(
     "Role",
@@ -22,5 +22,3 @@ const RolesModel = (sequelize, Sequelize) => {
   );
   return Role;
 };
-
-module.exports = RolesModel;
