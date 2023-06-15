@@ -7,7 +7,7 @@ const User = db.user;
 // Generate safe copy of users(without password)
 const generateSafeCopy = (user) => {
   const _user = { ...user };
-  delete _user.password;
+  delete _user.dataValues.password;
   return _user;
 };
 
@@ -19,7 +19,10 @@ const getUserByEmail = async (email) => {
 
 //Check if password is correct
 const isPasswordCorrect = async (email, password) => {
-  const user = await getUserByEmail(email);
+  // we cannot use getUserByEmail()
+  // because we need to use a password
+  // get getUserByEmail() has generateSafeCopy() which deletes a password from the record
+  const user = await User.findOne({ where: { email: email } });
   if (!user.dataValues.email) throw new NotFoundError("User not found");
   return await bcrypt.compare(password, user.dataValues.password);
 };

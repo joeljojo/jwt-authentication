@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const ClientError = require("../exceptions/clientError");
 const { getUserByEmail, isPasswordCorrect } = require("../models/helper/index");
 const UnauthorizedError = require("../exceptions/unauthorizedError");
