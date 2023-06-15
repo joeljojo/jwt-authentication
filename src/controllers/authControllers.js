@@ -26,7 +26,10 @@ const login = async (req, res, next) => {
 
   // This line of code shall not be hit when an error occurs
   // return token in response
-  res.status(200).json({ message: "Login Successfully", token: token });
+  res
+    .status(200)
+    .type("json")
+    .send({ message: "Login Successfully", token: token });
 };
 
 module.exports = { login };

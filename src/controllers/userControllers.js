@@ -13,7 +13,10 @@ const newUser = async (req, res, next) => {
   // NOTE: We will only get here if all new user information
   // is valid and the user was created.
   // Send an HTTP "Created" response.
-  res.status(201).json({ message: "User registered successfully", user: user });
+  res.status(201).type("json").send({
+    message: "User registered successfully",
+    user: user,
+  });
 };
 
 module.exports = { newUser };
