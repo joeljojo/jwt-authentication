@@ -27,6 +27,18 @@ const isPasswordCorrect = async (email, password) => {
   return await bcrypt.compare(password, user.dataValues.password);
 };
 
+const changePassword = async (email, password) => {
+  const user = await getUserByEmail(email);
+  if (!user.dataValues.email) throw new NotFoundError("User not found");
+  password = password.trim();
+
+  // Perform password checks(you may add more checks)
+  if (password.length === 0) throw new ClientError("Password required");
+
+  // update user password(ensure you store a hash)
+  await User.update({ password: bcrypt.hashSync(password, 12) });
+};
+
 const createUser = async (id, firstName, lastName, email, password) => {
   id.trim();
   firstName.trim();
@@ -62,4 +74,5 @@ module.exports = {
   generateSafeCopy,
   getUserByEmail,
   isPasswordCorrect,
+  changePassword,
 };

@@ -1,6 +1,10 @@
 const jwt = require("jsonwebtoken");
 const ClientError = require("../exceptions/clientError");
-const { getUserByEmail, isPasswordCorrect } = require("../models/helper/index");
+const {
+  getUserByEmail,
+  isPasswordCorrect,
+  changePassword,
+} = require("../models/helper/index");
 const UnauthorizedError = require("../exceptions/unauthorizedError");
 const config = require("../config");
 
@@ -32,4 +36,28 @@ const login = async (req, res, next) => {
     .send({ message: "Login Successfully", token: token });
 };
 
-module.exports = { login };
+const changeUserPassword = async (req, res, next) => {
+  // Get email from incomming token
+  const email = req.token.payload.email;
+
+  //Get passwords provided from req.body
+  const { oldPassword, newPassword } = req.body;
+  // ensure they are not empty
+  if (!(oldPassword && newPassword))
+    throw new ClientError("New and old passwords required");
+
+  //check if old password matches the currently stored password
+  // if mismatch throw an error to client
+  if (!(await isPasswordCorrect(email, oldPassword)))
+    throw new UnauthorizedError("Old password does not match");
+
+  // Update user password
+  // will not hit this code if old password doesn't match stored password
+  await changePassword(email, newPassword);
+  res
+    .status(200)
+    .type("json")
+    .send({ message: "Password updated successfully" });
+};
+
+module.exports = { login, changeUserPassword };
