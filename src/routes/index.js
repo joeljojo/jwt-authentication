@@ -1,9 +1,13 @@
 const express = require("express");
 const user = require("./userRoutes");
+const auth = require("./authRoutes");
 
-const routers = express.Router();
+const routes = express.Router();
 
 // All user operations will be available under the "users" route prefix.
-routers.use("/users", user);
+routes.use("/users", user);
 
-module.exports = routers;
+// All auth operations will be available under the "auth" route prefix.
+routes.use("/auth", auth);
+
+module.exports = routes;

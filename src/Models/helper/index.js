@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const db = require("../index");
 const ClientError = require("../../exceptions/clientError");
+const NotFoundError = require("../../exceptions/notFoundError");
 const User = db.user;
 
 // Generate safe copy of users(without password)
@@ -14,6 +15,13 @@ const generateSafeCopy = (user) => {
 const getUserByEmail = async (email) => {
   const emailAvailable = await User.findOne({ where: { email: email } });
   return emailAvailable ? generateSafeCopy(emailAvailable) : undefined;
+};
+
+//Check if password is correct
+const isPasswordCorrect = async (email, password) => {
+  const user = await getUserByEmail(email);
+  if (!user.dataValues.email) throw new NotFoundError("User not found");
+  return await bcrypt.compare(password, user.dataValues.password);
 };
 
 const createUser = async (id, firstName, lastName, email, password) => {
@@ -46,4 +54,9 @@ const createUser = async (id, firstName, lastName, email, password) => {
   return generateSafeCopy(user);
 };
 
-module.exports = { createUser, generateSafeCopy };
+module.exports = {
+  createUser,
+  generateSafeCopy,
+  getUserByEmail,
+  isPasswordCorrect,
+};
