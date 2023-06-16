@@ -36,7 +36,10 @@ const changePassword = async (email, password) => {
   if (password.length === 0) throw new ClientError("Password required");
 
   // update user password(ensure you store a hash)
-  await User.update({ password: bcrypt.hashSync(password, 12) });
+  await User.update(
+    { password: bcrypt.hashSync(password, 12) },
+    { where: { email: email } }
+  );
 };
 
 const createUser = async (id, firstName, lastName, email, password) => {

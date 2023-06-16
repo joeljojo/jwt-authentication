@@ -22,11 +22,21 @@ const login = async (req, res, next) => {
     throw new UnauthorizedError("Invalid email or password");
 
   //Generate and sign jwt token
-  const token = jwt.sign({ user }, config.jwt.secret, {
-    expiresIn: "1h",
-    notBefore: "0", // Cannot use before now
-    algorithm: "HS256",
-  });
+  //For simplicity let's expound the user's properties
+  const token = jwt.sign(
+    {
+      userId: user.dataValues.id,
+      firstName: user.dataValues.firstName,
+      lastName: user.dataValues.lastName,
+      email: user.dataValues.email,
+    },
+    config.jwt.secret,
+    {
+      expiresIn: "1h",
+      notBefore: "0", // Cannot use before now
+      algorithm: "HS256",
+    }
+  );
 
   // This line of code shall not be hit when an error occurs
   // return token in response
@@ -39,7 +49,6 @@ const login = async (req, res, next) => {
 const changeUserPassword = async (req, res, next) => {
   // Get email from incomming token
   const email = req.token.payload.email;
-
   //Get passwords provided from req.body
   const { oldPassword, newPassword } = req.body;
   // ensure they are not empty

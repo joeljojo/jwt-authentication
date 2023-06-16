@@ -28,4 +28,4 @@ const checkJwt = (req, res, next) => {
   next();
 };
 
-module.exports = { checkJwt };
+module.exports = checkJwt;
