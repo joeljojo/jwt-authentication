@@ -11,4 +11,7 @@ router.post("/", asyncHandler(UserController.newUser));
 //Get all users
 router.get("/", [checkJwt], asyncHandler(UserController.listAll));
 
+// Get user by id
+router.get("/:id", [checkJwt], asyncHandler(UserController.getUserById));
+
 module.exports = router;

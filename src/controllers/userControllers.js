@@ -1,6 +1,7 @@
 // const createUser = require("../models/helper/index");
 const { v4: uuidv4 } = require("uuid");
-const { createUser, getAllUSers } = require("../models/helper");
+const { createUser, getAllUsers, getUser } = require("../models/helper");
+const ForbiddenError = require("../exceptions/forbiddenError");
 
 const newUser = async (req, res, next) => {
   const id = uuidv4(); // generate id randomly
@@ -20,8 +21,23 @@ const newUser = async (req, res, next) => {
 };
 
 const listAll = async (req, res, next) => {
-  let users = await getAllUSers();
+  let users = await getAllUsers();
   //Return user nfo
   res.status(200).type("json").send(users);
 };
-module.exports = { newUser, listAll };
+
+const getUserById = async (req, res, next) => {
+  // Get ID fron the URL
+  const id = req.params.id;
+
+  // Validate if id is same as one in the token
+  if (id !== req.token.payload.userId)
+    throw new ForbiddenError("Not enough permissions");
+
+  // Get the user with requuested Id
+  const user = await getUser(id);
+
+  // we will only hit this line when the user with requested id is found
+  res.status(200).type("json").send(user);
+};
+module.exports = { newUser, listAll, getUserById };

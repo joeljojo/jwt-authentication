@@ -72,15 +72,23 @@ const createUser = async (id, firstName, lastName, email, password) => {
   return generateSafeCopy(user);
 };
 
-const getAllUSers = async () => {
+const getAllUsers = async () => {
   const users = await User.findAll();
   return users.map((user) => generateSafeCopy(user));
 };
+
+const getUser = async (id) => {
+  const user = await User.findOne({ where: { id: id } });
+  if (!user.dataValues.id) throw new NotFoundError("User not found");
+  return generateSafeCopy(user);
+};
+
 module.exports = {
   createUser,
   generateSafeCopy,
   getUserByEmail,
   isPasswordCorrect,
   changePassword,
-  getAllUSers,
+  getAllUsers,
+  getUser,
 };
