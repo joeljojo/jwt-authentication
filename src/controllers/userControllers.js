@@ -1,6 +1,6 @@
 // const createUser = require("../models/helper/index");
 const { v4: uuidv4 } = require("uuid");
-const { createUser } = require("../models/helper");
+const { createUser, getAllUSers } = require("../models/helper");
 
 const newUser = async (req, res, next) => {
   const id = uuidv4(); // generate id randomly
@@ -19,4 +19,9 @@ const newUser = async (req, res, next) => {
   });
 };
 
-module.exports = { newUser };
+const listAll = async (req, res, next) => {
+  let users = await getAllUSers();
+  //Return user nfo
+  res.status(200).type("json").send(users);
+};
+module.exports = { newUser, listAll };

@@ -72,10 +72,15 @@ const createUser = async (id, firstName, lastName, email, password) => {
   return generateSafeCopy(user);
 };
 
+const getAllUSers = async () => {
+  const users = await User.findAll();
+  return users.map((user) => generateSafeCopy(user));
+};
 module.exports = {
   createUser,
   generateSafeCopy,
   getUserByEmail,
   isPasswordCorrect,
   changePassword,
+  getAllUSers,
 };
