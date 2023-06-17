@@ -1,6 +1,11 @@
 // const createUser = require("../models/helper/index");
 const { v4: uuidv4 } = require("uuid");
-const { createUser, getAllUsers, getUser } = require("../models/helper");
+const {
+  createUser,
+  getAllUsers,
+  getUser,
+  updateUser,
+} = require("../models/helper");
 const ForbiddenError = require("../exceptions/forbiddenError");
 
 const newUser = async (req, res, next) => {
@@ -40,4 +45,25 @@ const getUserById = async (req, res, next) => {
   // we will only hit this line when the user with requested id is found
   res.status(200).type("json").send(user);
 };
-module.exports = { newUser, listAll, getUserById };
+
+const editUser = async (req, res, next) => {
+  // Get user id from URL
+  const id = req.params.id;
+  // Validate if id is same as one in the token
+  if (id !== req.token.payload.userId)
+    throw new ForbiddenError("Not enough permissions");
+
+  // Will include roles to prevent user to assign admin roles
+
+  // Get values from req.body
+  const { email } = req.body;
+
+  // Retrieve and update user
+  const user = await getUser(id);
+  const updatedUser = updateUser(id, email || user.dataValues.email);
+
+  // will hit this line only when the update executes successfully
+  res.status(204).type("json").send(updatedUser);
+};
+
+module.exports = { newUser, listAll, getUserById, editUser };

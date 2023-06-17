@@ -83,6 +83,30 @@ const getUser = async (id) => {
   return generateSafeCopy(user);
 };
 
+const updateUser = async (id, email) => {
+  // check if user exists
+  await getUser(id);
+
+  // Perform validation checks
+  if (email.length === 0) throw new ClientError("Invalid input");
+
+  // trim the inputs
+  id.trim();
+  email.trim();
+
+  // Check if the retrieved user ID is not undefined
+  // and if it is different from the current user's ID
+  const userIdWithEmail = await getUserByEmail(email)?.email;
+  if (userIdWithEmail !== undefined && userIdWithEmail !== id) {
+    throw new ClientError("Invalid user");
+  }
+
+  // Apply updates
+  const user = await User.update({ email: email }, { where: { id: id } });
+
+  return generateSafeCopy(user);
+};
+
 module.exports = {
   createUser,
   generateSafeCopy,
@@ -91,4 +115,5 @@ module.exports = {
   changePassword,
   getAllUsers,
   getUser,
+  updateUser,
 };

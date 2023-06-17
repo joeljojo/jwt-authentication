@@ -14,4 +14,7 @@ router.get("/", [checkJwt], asyncHandler(UserController.listAll));
 // Get user by id
 router.get("/:id", [checkJwt], asyncHandler(UserController.getUserById));
 
+//update user
+router.patch("/:id", [checkJwt], asyncHandler(UserController.editUser));
+
 module.exports = router;
