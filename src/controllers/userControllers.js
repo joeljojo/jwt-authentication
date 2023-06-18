@@ -60,10 +60,11 @@ const editUser = async (req, res, next) => {
 
   // Retrieve and update user
   const user = await getUser(id);
-  const updatedUser = updateUser(id, email || user.dataValues.email);
+  await updateUser(id, email || user.dataValues.email);
 
   // will hit this line only when the update executes successfully
-  res.status(204).type("json").send(updatedUser);
+  //Send HTTP no content resonse
+  res.status(204).type("json").send();
 };
 
 module.exports = { newUser, listAll, getUserById, editUser };

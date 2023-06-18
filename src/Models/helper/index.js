@@ -102,9 +102,7 @@ const updateUser = async (id, email) => {
   }
 
   // Apply updates
-  const user = await User.update({ email: email }, { where: { id: id } });
-
-  return generateSafeCopy(user);
+  await User.update({ email: email }, { where: { id: id } });
 };
 
 module.exports = {
