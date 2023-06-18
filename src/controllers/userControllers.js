@@ -15,6 +15,7 @@ const newUser = async (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
 
   // create user
+  // This is used to create regular users
   const user = await createUser(id, firstName, lastName, email, password);
 
   // NOTE: We will only get here if all new user information

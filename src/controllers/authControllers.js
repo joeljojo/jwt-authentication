@@ -29,6 +29,7 @@ const login = async (req, res, next) => {
       firstName: user.dataValues.firstName,
       lastName: user.dataValues.lastName,
       email: user.dataValues.email,
+      role: user.dataValues.role,
     },
     config.jwt.secret,
     {

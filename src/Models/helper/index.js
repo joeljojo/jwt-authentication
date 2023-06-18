@@ -3,6 +3,7 @@ const db = require("../index");
 const ClientError = require("../../exceptions/clientError");
 const NotFoundError = require("../../exceptions/notFoundError");
 const User = db.user;
+const Role = db.role;
 
 // Generate safe copy of users(without password)
 const generateSafeCopy = (user) => {
@@ -13,7 +14,13 @@ const generateSafeCopy = (user) => {
 
 // Get user by email if the user with provided email exists
 const getUserByEmail = async (email) => {
-  const emailAvailable = await User.findOne({ where: { email: email } });
+  const emailAvailable = await User.findOne({
+    where: { email: email },
+    include: Role,
+  });
+  // get user roles
+  const roles = await emailAvailable.getRoles();
+  emailAvailable.dataValues.role = roles[0].name;
   return emailAvailable ? generateSafeCopy(emailAvailable) : undefined;
 };
 
@@ -61,7 +68,6 @@ const createUser = async (id, firstName, lastName, email, password) => {
     throw new ClientError("User already exists");
 
   //Create the user
-
   const user = await User.create({
     id,
     firstName,
@@ -69,11 +75,16 @@ const createUser = async (id, firstName, lastName, email, password) => {
     email,
     password: bcrypt.hashSync(password, 12),
   });
+
+  // Assign role(s) to the user
+  const role = await Role.findOne({ where: { name: "user" } });
+  await user.setRoles(role);
+
   return generateSafeCopy(user);
 };
 
 const getAllUsers = async () => {
-  const users = await User.findAll();
+  const users = await User.findAll({ include: Role });
   return users.map((user) => generateSafeCopy(user));
 };
 
