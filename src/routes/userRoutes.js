@@ -17,4 +17,7 @@ router.get("/:id", [checkJwt], asyncHandler(UserController.getUserById));
 //update user
 router.patch("/:id", [checkJwt], asyncHandler(UserController.editUser));
 
+// delete user
+router.delete("/:id", [checkJwt], asyncHandler(UserController.deleteUser));
+
 module.exports = router;

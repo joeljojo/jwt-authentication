@@ -79,7 +79,7 @@ const getAllUsers = async () => {
 
 const getUser = async (id) => {
   const user = await User.findOne({ where: { id: id } });
-  if (!user.dataValues.id) throw new NotFoundError("User not found");
+  if (!user?.dataValues.id) throw new NotFoundError("User not found");
   return generateSafeCopy(user);
 };
 
@@ -105,6 +105,13 @@ const updateUser = async (id, email) => {
   await User.update({ email: email }, { where: { id: id } });
 };
 
+const deleteUserById = async (id) => {
+  //Check is user with given id exists
+  await getUser(id);
+  // if exists delete user
+  await User.destroy({ where: { id: id } });
+};
+
 module.exports = {
   createUser,
   generateSafeCopy,
@@ -114,4 +121,5 @@ module.exports = {
   getAllUsers,
   getUser,
   updateUser,
+  deleteUserById,
 };

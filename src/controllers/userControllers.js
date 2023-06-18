@@ -5,6 +5,7 @@ const {
   getAllUsers,
   getUser,
   updateUser,
+  deleteUserById,
 } = require("../models/helper");
 const ForbiddenError = require("../exceptions/forbiddenError");
 
@@ -67,4 +68,15 @@ const editUser = async (req, res, next) => {
   res.status(204).type("json").send();
 };
 
-module.exports = { newUser, listAll, getUserById, editUser };
+const deleteUser = async (req, res, next) => {
+  //Get user id from URL
+  const id = req.params.id;
+
+  //delete user
+  await deleteUserById(id);
+
+  // will only hit this line of code when the user is deleted
+  res.status(204).type("json").send();
+};
+
+module.exports = { newUser, listAll, getUserById, editUser, deleteUser };
