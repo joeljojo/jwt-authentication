@@ -37,8 +37,8 @@ const getUserById = async (req, res, next) => {
   // Get ID fron the URL
   const id = req.params.id;
 
-  // Validate if id is same as one in the token
-  if (id !== req.token.payload.userId)
+  // Validate if id is same as ones in the token
+  if (req.token.payload.role === "user" && id !== req.token.payload.userId)
     throw new ForbiddenError("Not enough permissions");
 
   // Get the user with requuested Id

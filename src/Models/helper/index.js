@@ -18,10 +18,15 @@ const getUserByEmail = async (email) => {
     where: { email: email },
     include: Role,
   });
-  // get user roles
-  const roles = await emailAvailable.getRoles();
-  emailAvailable.dataValues.role = roles[0].name;
-  return emailAvailable ? generateSafeCopy(emailAvailable) : undefined;
+
+  if (!emailAvailable) {
+    return undefined;
+  } else {
+    // get user roles
+    const roles = await emailAvailable.getRoles();
+    emailAvailable.dataValues.role = roles[0].name;
+    return generateSafeCopy(emailAvailable);
+  }
 };
 
 //Check if password is correct
