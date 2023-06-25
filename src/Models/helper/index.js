@@ -84,12 +84,12 @@ const createUser = async (id, firstName, lastName, email, password) => {
 };
 
 const getAllUsers = async () => {
-  const users = await User.findAll({ include: Role });
+  const users = await User.findAll();
   return users.map((user) => generateSafeCopy(user));
 };
 
 const getUser = async (id) => {
-  const user = await User.findOne({ where: { id: id } });
+  const user = await User.findByPk(id);
   if (!user?.dataValues.id) throw new NotFoundError("User not found");
   return generateSafeCopy(user);
 };
